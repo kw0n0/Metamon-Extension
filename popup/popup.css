@@ -1,0 +1,12 @@
+#button-box {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}

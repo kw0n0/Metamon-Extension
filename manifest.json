@@ -15,10 +15,11 @@
     "service_worker": "background.js",
     "type": "module"
   },
+  "permissions": ["tabs"],
   "content_scripts": [
     {
-      "js": ["scripts/index.js"],
-      "matches": ["<all urls>"]
+      "js": ["scripts/content.js"],
+      "matches": ["<all_urls>"]
     }
   ],
   "commands": {
