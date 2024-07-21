@@ -1,18 +1,45 @@
-const colors = ['tomato', 'yellow', 'beige'];
-const buttonBox = document.getElementById('button-box');
+class HighlightColorBox {
+  constructor({ addButtonToBox }) {
+    this.colors = ['tomato', 'yellow', 'beige'];
+    this.addButtonToBox = addButtonToBox;
+  }
 
-colors.forEach((color) => {
+  show() {
+    this.colors.forEach((color) => {
+      addButtonToBox(color);
+    });
+  }
+}
+
+function addButtonToBox(color) {
+  const buttonBox = getButtonBox();
+  const colorButton = makeButton(color);
+  buttonBox.appendChild(colorButton);
+}
+
+function getButtonBox() {
+  const buttonBox = document.getElementById('button-box');
+  return buttonBox;
+}
+
+function makeButton(color) {
   const colorButton = document.createElement('button');
   colorButton.style.background = color;
   colorButton.addEventListener(
     'click',
-    handleClickColorBtn.bind(null, { color: colorButton.style.background })
+    sendColorChangedMsg.bind(null, { color: colorButton.style.background })
   );
-  buttonBox.appendChild(colorButton);
-});
+  return colorButton;
+}
 
-function handleClickColorBtn({ color }) {
+function sendColorChangedMsg({ color }) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
     chrome.tabs.sendMessage(tab[0].id, { type: 'highlightColor', data: color });
   });
 }
+
+const hlColorBox = new HighlightColorBox({
+  addButtonToBox,
+});
+
+hlColorBox.show();
