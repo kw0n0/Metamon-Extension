@@ -1,45 +1,48 @@
 class HighlightColorBox {
-  constructor({ addButtonToBox }) {
+  constructor({ sendMessageToTab }) {
     this.colors = ['tomato', 'yellow', 'beige'];
-    this.addButtonToBox = addButtonToBox;
+    this.sendMessageToTab = sendMessageToTab;
+  }
+
+  #getButtonBox() {
+    const buttonBox = document.getElementById('button-box');
+    return buttonBox;
+  }
+
+  #makeButton(color) {
+    const colorButton = document.createElement('button');
+    colorButton.style.background = color;
+    colorButton.addEventListener(
+      'click',
+      sendMessageToTab.bind(null, {
+        type: 'highlightColor',
+        data: { color: colorButton.style.background },
+      })
+    );
+    return colorButton;
+  }
+
+  #addButtonToBox(box, element) {
+    box.appendChild(element);
   }
 
   show() {
     this.colors.forEach((color) => {
-      addButtonToBox(color);
+      const buttonBox = this.#getButtonBox();
+      const colorButton = this.#makeButton(color);
+      this.#addButtonToBox(buttonBox, colorButton);
     });
   }
 }
 
-function addButtonToBox(color) {
-  const buttonBox = getButtonBox();
-  const colorButton = makeButton(color);
-  buttonBox.appendChild(colorButton);
-}
-
-function getButtonBox() {
-  const buttonBox = document.getElementById('button-box');
-  return buttonBox;
-}
-
-function makeButton(color) {
-  const colorButton = document.createElement('button');
-  colorButton.style.background = color;
-  colorButton.addEventListener(
-    'click',
-    sendColorChangedMsg.bind(null, { color: colorButton.style.background })
-  );
-  return colorButton;
-}
-
-function sendColorChangedMsg({ color }) {
+function sendMessageToTab({ type, data }) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
-    chrome.tabs.sendMessage(tab[0].id, { type: 'highlightColor', data: color });
+    chrome.tabs.sendMessage(tab[0].id, { type: type, data: data.color });
   });
 }
 
 const hlColorBox = new HighlightColorBox({
-  addButtonToBox,
+  sendMessageToTab,
 });
 
 hlColorBox.show();
