@@ -3,7 +3,6 @@ const actions = {
 };
 
 function changeHighlightColor(data) {
-
   const style = document.querySelector('style[metamon]');
 
   if (style) {
@@ -19,5 +18,5 @@ function changeHighlightColor(data) {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (!actions[request.type]) return;
 
-  }
+  actions[request.type](request.data);
 });
