@@ -29,5 +29,11 @@
         "mac": "Command+B"
       }
     }
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "matches": ["<all_urls>"],
+      "resources": ["scripts/modules/tooltip.js", "scripts/modules/messages.js"]
+    }
+  ]
 }
