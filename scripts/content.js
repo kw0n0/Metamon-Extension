@@ -1,17 +1,42 @@
 //TODO: 모듈로 분리예정
-const events = [
-  {
-    target: document.body,
-    action: 'mouseup',
-    handler: selectText,
-  },
-];
+class Tooltip {
+  constructor({ width, height, id }) {
+    this.width = width;
+    this.height = height;
+    this.id = id;
+    this.initialize();
+  }
 
-function selectText() {
-  const text = window.getSelection().toString();
-  if (!text) return;
+  initialize() {
+    const box = document.createElement('div');
+    box.id = this.id;
+    box.style.position = 'absolute';
+    box.style.display = 'none';
+    //FIXME: 가장 높은 zIndex 설정방법 수정필요
+    box.style.zIndex = 99999;
 
-  console.log(text);
+    const customStyle = {
+      width: `${this.width}px`,
+      height: `${this.height}px`,
+
+      backgroundColor: 'cyan',
+      borderRadius: '50px',
+    };
+
+    Object.assign(box.style, customStyle);
+    document.body.appendChild(box);
+  }
+
+  show({ top, left, right, bottom }) {
+    //FIXME: 위치 수정필요
+    const box = document.getElementById(this.id);
+    const posY = top < this.height ? bottom : top - this.height;
+    const posX = left < this.width ? right : left - this.width;
+
+    box.style.top = `${posY + window.scrollY}px`;
+    box.style.left = `${posX + window.scrollX}px`;
+    box.style.display = 'block';
+  }
 }
 
 //TODO: 모듈로 분리예정
@@ -33,8 +58,7 @@ function changeHighlightColor(data) {
 }
 
 class Content {
-  constructor({ events, messages }) {
-    this.events = events;
+  constructor({ messages }) {
     this.messages = messages;
   }
 
@@ -47,10 +71,28 @@ class Content {
     });
   }
 
+  //TODO: 이벤트리스너가 많아지는 경우에 대한 고려
   #onSystemEvent() {
-    this.events.forEach(({ target, action, handler }) => {
-      target.addEventListener(action, handler);
+    const tooltip = new Tooltip({
+      width: 70,
+      height: 30,
+      id: 'metamon-tooltip1',
     });
+
+    function selectText() {
+      const text = window.getSelection().toString();
+      if (!text) return;
+
+      const { top, right, left, bottom } = window
+        .getSelection()
+        .getRangeAt(0)
+        .getBoundingClientRect();
+
+      tooltip.show({ top, right, left, bottom });
+      console.log(text);
+    }
+
+    document.body.addEventListener('mouseup', selectText);
   }
 
   listen() {
@@ -59,6 +101,6 @@ class Content {
   }
 }
 
-const content = new Content({ events, messages });
+const content = new Content({ messages });
 
 content.listen();
