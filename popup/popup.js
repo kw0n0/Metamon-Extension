@@ -9,17 +9,20 @@ class HighlightColorBox {
     return buttonBox;
   }
 
-  #makeButton(color) {
-    const colorButton = document.createElement('button');
-    colorButton.style.background = color;
-    colorButton.addEventListener(
-      'click',
+  #makeColorInput() {
+    const input = document.createElement('input');
+    input.type = 'color';
+    input.style.width = '200px';
+    input.style.height = '50px';
+
+    input.addEventListener('input', (e) =>
       sendMessageToTab.bind(null, {
         type: 'highlightColor',
-        data: { color: colorButton.style.background },
-      })
+        data: { color: e.target.value },
+      })()
     );
-    return colorButton;
+
+    return input;
   }
 
   #addButtonToBox(box, element) {
@@ -27,17 +30,18 @@ class HighlightColorBox {
   }
 
   show() {
-    this.colors.forEach((color) => {
-      const buttonBox = this.#getButtonBox();
-      const colorButton = this.#makeButton(color);
-      this.#addButtonToBox(buttonBox, colorButton);
-    });
+    const buttonBox = this.#getButtonBox();
+    const colorInput = this.#makeColorInput();
+    this.#addButtonToBox(buttonBox, colorInput);
   }
 }
 
 function sendMessageToTab({ type, data }) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tab) => {
-    chrome.tabs.sendMessage(tab[0].id, { type: type, data: data.color });
+    chrome.tabs.sendMessage(tab[0].id, {
+      type: type,
+      data: data.color,
+    });
   });
 }
 
