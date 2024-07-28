@@ -3,38 +3,58 @@ class Tooltip {
     this.width = width;
     this.height = height;
     this.id = id;
+    this.curText;
+    this.box = document.createElement('div');
     this.initialize();
   }
 
   initialize() {
-    const box = document.createElement('div');
-    box.id = this.id;
-    box.style.position = 'absolute';
-    box.style.display = 'none';
+    this.box.id = this.id;
+    this.box.style.position = 'absolute';
+    this.box.style.display = 'none';
+    this.box.textContent = '텍스트 저장';
+
+    this.box.addEventListener('click', () => {
+      console.log(this.curText);
+      this.hide();
+    });
+
     //FIXME: 가장 높은 zIndex 설정방법 수정필요
-    box.style.zIndex = 99999;
+    this.box.style.zIndex = 99999;
 
     const customStyle = {
-      width: `${this.width}px`,
+      width: 'auto',
       height: `${this.height}px`,
-
-      backgroundColor: 'cyan',
+      color: 'black',
+      fontWeight: 'bold',
+      padding: '10px',
+      alignItems: 'center',
+      cursor: 'pointer',
+      border: '2px solid gray',
+      backgroundColor: 'white',
       borderRadius: '50px',
     };
 
-    Object.assign(box.style, customStyle);
-    document.body.appendChild(box);
+    Object.assign(this.box.style, customStyle);
+    document.body.appendChild(this.box);
   }
 
   show({ top, left, right, bottom }) {
     //FIXME: 위치 수정필요
-    const box = document.getElementById(this.id);
     const posY = top < this.height ? bottom : top - this.height;
     const posX = left < this.width ? right : left - this.width;
 
-    box.style.top = `${posY + window.scrollY}px`;
-    box.style.left = `${posX + window.scrollX}px`;
-    box.style.display = 'block';
+    this.box.style.top = `${posY + window.scrollY}px`;
+    this.box.style.left = `${posX + window.scrollX}px`;
+    this.box.style.display = 'flex';
+  }
+
+  saveText(text) {
+    this.curText = text;
+  }
+
+  hide() {
+    this.box.style.display = 'none';
   }
 }
 

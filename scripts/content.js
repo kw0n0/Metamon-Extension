@@ -41,6 +41,7 @@ class Content {
         .getBoundingClientRect();
 
       tooltip.show({ top, right, left, bottom });
+      tooltip.saveText(text);
     }
 
     document.body.addEventListener('mouseup', selectText);
