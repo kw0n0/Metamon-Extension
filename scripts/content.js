@@ -33,7 +33,11 @@ class Content {
 
     function selectText() {
       const text = window.getSelection().toString();
-      if (!text) return;
+
+      if (!text.trim()) {
+        tooltip.hide();
+        return;
+      }
 
       const { top, right, left, bottom } = window
         .getSelection()
