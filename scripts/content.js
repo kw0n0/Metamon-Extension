@@ -8,10 +8,16 @@ async function createMessages() {
   return result.messages;
 }
 
+async function loadStore() {
+  const result = await import('./modules/store.js');
+  return result.getStore;
+}
+
 class Content {
-  constructor({ createTooltip, createMessages }) {
+  constructor({ createTooltip, createMessages, loadStore }) {
     this.createMessages = createMessages;
     this.createTooltip = createTooltip;
+    this.loadStore = loadStore;
   }
 
   #onRuntimeMessage({ messages }) {
@@ -24,7 +30,11 @@ class Content {
   }
 
   //TODO: 이벤트리스너가 많아지는 경우에 대한 고려
-  #onSystemEvent({ Tooltip }) {
+  async #onSystemEvent({ Tooltip }) {
+    const getStore = await this.loadStore();
+    const store = getStore();
+    let text;
+
     const tooltip = new Tooltip({
       width: 70,
       height: 30,
@@ -32,23 +42,28 @@ class Content {
     });
 
     function selectText() {
-      const text = window.getSelection().toString();
-
-      if (!text.trim()) {
+      const tmpText = window.getSelection().toString();
+      if (!tmpText.trim()) {
         tooltip.hide();
         return;
       }
 
+      text = window.getSelection().toString();
       const { top, right, left, bottom } = window
         .getSelection()
         .getRangeAt(0)
         .getBoundingClientRect();
 
       tooltip.show({ top, right, left, bottom });
-      tooltip.saveText(text);
+    }
+
+    function saveText() {
+      store.add(text);
+      text = '';
     }
 
     document.body.addEventListener('mouseup', selectText);
+    tooltip.click(saveText);
   }
 
   listen() {
@@ -61,6 +76,6 @@ class Content {
   }
 }
 
-const content = new Content({ createTooltip, createMessages });
+const content = new Content({ createTooltip, createMessages, loadStore });
 
 content.listen();

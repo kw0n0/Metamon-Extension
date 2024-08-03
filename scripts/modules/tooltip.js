@@ -14,11 +14,6 @@ class Tooltip {
     this.box.style.display = 'none';
     this.box.textContent = '텍스트 저장';
 
-    this.box.addEventListener('click', () => {
-      console.log(this.curText);
-      this.hide();
-    });
-
     //FIXME: 가장 높은 zIndex 설정방법 수정필요
     this.box.style.zIndex = 99999;
 
@@ -49,8 +44,9 @@ class Tooltip {
     this.box.style.display = 'flex';
   }
 
-  saveText(text) {
-    this.curText = text;
+  click(handleClick) {
+    this.box.addEventListener('click', handleClick);
+    this.hide();
   }
 
   hide() {
