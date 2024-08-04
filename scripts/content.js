@@ -33,7 +33,6 @@ class Content {
   async #onSystemEvent({ Tooltip }) {
     const getStore = await this.loadStore();
     const store = getStore();
-    let text;
 
     const tooltip = new Tooltip({
       width: 70,
@@ -42,13 +41,13 @@ class Content {
     });
 
     function selectText() {
-      const tmpText = window.getSelection().toString();
-      if (!tmpText.trim()) {
+      const selectedText = window.getSelection().toString();
+      if (!selectedText.trim()) {
         tooltip.hide();
         return;
       }
 
-      text = window.getSelection().toString();
+      tooltip.text = selectedText;
       const { top, right, left, bottom } = window
         .getSelection()
         .getRangeAt(0)
@@ -58,8 +57,8 @@ class Content {
     }
 
     function saveText() {
-      store.add(text);
-      text = '';
+      store.add(tooltip.text);
+      tooltip.text = '';
     }
 
     document.body.addEventListener('mouseup', selectText);

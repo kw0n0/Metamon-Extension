@@ -3,9 +3,9 @@ class Tooltip {
     this.width = width;
     this.height = height;
     this.id = id;
-    this.curText;
     this.box = document.createElement('div');
     this.initialize();
+    this._text;
   }
 
   initialize() {
@@ -32,6 +32,14 @@ class Tooltip {
 
     Object.assign(this.box.style, customStyle);
     document.body.appendChild(this.box);
+  }
+
+  get text() {
+    return this._text;
+  }
+
+  set text(newText) {
+    this._text = newText;
   }
 
   show({ top, left, right, bottom }) {
