@@ -35,8 +35,6 @@ class Content {
     const store = getStore();
 
     const tooltip = new Tooltip({
-      width: 70,
-      height: 30,
       id: 'metamon-tooltip1',
     });
 
@@ -59,6 +57,7 @@ class Content {
     function saveText() {
       store.add(tooltip.text);
       tooltip.text = '';
+      tooltip.hide();
     }
 
     document.body.addEventListener('mouseup', selectText);
