@@ -61,7 +61,7 @@ class Content {
     }
 
     document.body.addEventListener('mouseup', selectText);
-    tooltip.click(saveText);
+    tooltip.registerEvent('saveButton', 'click', saveText);
   }
 
   listen() {

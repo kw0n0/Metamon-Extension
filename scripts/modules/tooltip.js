@@ -154,6 +154,17 @@ class Tooltip {
   hide() {
     this.box.style.display = 'none';
   }
+
+  registerEvent(target, action, handler) {
+    let t = null;
+
+    switch (target) {
+      case 'saveButton':
+        t = this.saveButton;
+    }
+
+    t.addEventListener(action, handler);
+  }
 }
 
 export { Tooltip };
