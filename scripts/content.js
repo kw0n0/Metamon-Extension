@@ -1,5 +1,5 @@
 async function createTooltip() {
-  const result = await import('./modules/tooltip.js');
+  const result = await import('./modules/tooltip/tooltip.js');
   return result.Tooltip;
 }
 
@@ -36,6 +36,7 @@ class Content {
 
     const tooltip = new Tooltip({
       id: 'metamon-tooltip1',
+      events: { target: 'saveButton', action: 'click', handler: saveText },
     });
 
     function selectText() {
@@ -61,7 +62,6 @@ class Content {
     }
 
     document.body.addEventListener('mouseup', selectText);
-    tooltip.registerEvent('saveButton', 'click', saveText);
   }
 
   listen() {

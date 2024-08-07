@@ -34,7 +34,7 @@
     {
       "matches": ["<all_urls>"],
       "resources": [
-        "scripts/modules/tooltip.js",
+        "scripts/modules/tooltip/*",
         "scripts/modules/messages.js",
         "scripts/modules/store.js"
       ]
