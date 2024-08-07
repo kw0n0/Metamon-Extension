@@ -1,5 +1,5 @@
 async function loadElements() {
-  const result = await import('./buttons.js');
+  const result = await import('./elements.js');
   return result;
 }
 
