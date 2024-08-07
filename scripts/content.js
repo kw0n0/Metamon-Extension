@@ -64,13 +64,12 @@ class Content {
     document.body.addEventListener('mouseup', selectText);
   }
 
-  listen() {
-    this.createMessages().then((messages) => {
-      this.#onRuntimeMessage({ messages });
-    });
-    this.createTooltip().then((Tooltip) => {
-      this.#onSystemEvent({ Tooltip });
-    });
+  async listen() {
+    const messages = await this.createMessages();
+    const Tooltip = await this.createTooltip();
+
+    this.#onRuntimeMessage({ messages });
+    this.#onSystemEvent({ Tooltip });
   }
 }
 
